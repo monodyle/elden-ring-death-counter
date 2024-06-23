@@ -1,6 +1,6 @@
 [package]
 name = "elden-ring-death-counter"
-description = "Oh yes... Tarnished, are we? Come to the Lands Between for the Elden Ring, hmm? Of course you have. No shame in it. Unfortunately for you, however, you are maidenless."
+description = "Oh yes... Tarnished, are we? Come to the Lands Between for the Elden Ring, hmm? Of course you have.\nNo shame in it.\nUnfortunately for you, however, you are maidenless."
 version = "0.2.0"
 edition = "2021"
 
