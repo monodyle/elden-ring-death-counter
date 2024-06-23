@@ -59,9 +59,20 @@ OBS Browser Source Example:
 - Height: `84`
 - Custom CSS:
 ```css
-@import url('https://fonts.googleapis.com/css2?family=Tiny5&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Francois+One&display=swap');
 
-body { background-color: rgba(0, 0, 0, 0.8); color: #fff; margin: 0px auto; overflow: hidden; font-family: "Tiny5", sans-serif; display: grid; place-items: center }
+body {
+	background-color: rgba(0, 0, 0, 0.8);
+	color: #fff;
+	margin: 0px auto;
+	overflow: hidden;
+	font-family: "Francois One", sans-serif;
+	display: grid;
+	place-items: center;
+	font-weight: 400;
+	text-transform: uppercase;
+	overflow: hidden;
+}
 ```
 
 ![](example.png)
