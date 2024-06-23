@@ -1,6 +1,6 @@
-mod cache;
+mod storage;
 
-use cache::Cache;
+use storage::Storage;
 use clap::{arg, command, Parser};
 use elden_ring_death_counter::read_save_file;
 use std::{
@@ -28,7 +28,7 @@ struct Cli {
     /// Output filename format (default: {slot}-{character_name}.txt)
     #[arg(long, default_value_t = String::from("{slot}-{character_name}.txt"))]
     outfile: String,
-    /// Clear all previous cache, this option should be using standalone
+    /// Clear all previous storage, this option should be using standalone
     #[arg(long, default_value_t = false)]
     flush: bool,
 }
@@ -37,7 +37,7 @@ fn main() {
     let cli = Cli::parse();
 
     if cli.flush {
-        Cache::flush();
+        Storage::flush();
         process::exit(0);
     }
 
@@ -63,8 +63,8 @@ fn main() {
         })
     }
 
-    /* cache to prevent the save file is writing so memory bytes at death position going to 0x0 */
-    let mut cache = Cache::init(&save, cli.from);
+    /* storage to prevent the save file is writing so memory bytes at death position going to 0x0 */
+    let mut storage = Storage::init(&save, cli.from);
 
     let path = Path::new(&cli.outdir);
     if !path.exists() {
@@ -76,19 +76,19 @@ fn main() {
             .replace("{slot}", &slot.to_string())
             .replace("{character_name}", &character.name);
         let path = path.join(file_name);
-        let key = Cache::get_cache_key(slot, character, cli.from);
-        let death_cache = cache.get_record(key.clone());
+        let key = Storage::get_key(slot, character, cli.from);
+        let death_storage = storage.get_record(key.clone());
         let mut death = 0.max(character.death - cli.from);
-        if let Some(&death_cache) = death_cache {
-            death = death.max(death_cache);
-            if death != death_cache {
-                cache.update_record(key, death);
+        if let Some(&death_storage) = death_storage {
+            death = death.max(death_storage);
+            if death != death_storage {
+                storage.update_record(key, death);
             }
         }
         let content = cli.format.replace("{}", &death.to_string());
         fs::write(path.clone(), content).expect("unable to write output");
     }
 
-	cache.write_down();
+	storage.write_down();
     println!("Done.")
 }

@@ -2,38 +2,38 @@ use std::{collections::HashMap, fs, path::Path};
 
 use elden_ring_death_counter::Character;
 
-pub struct Cache {
+pub struct Storage {
     pub data: HashMap<String, i32>,
 }
 
-impl Cache {
-    const CACHE_PATH: &'static str = ".cache";
+impl Storage {
+    const STORAGE_PATH: &'static str = ".storage";
 
-    pub fn get_cache_key(slot: usize, character: &Character, from: i32) -> String {
+    pub fn get_key(slot: usize, character: &Character, from: i32) -> String {
         format!("index_{}+name_{}+from_{}", slot, character.name, from)
     }
 
     pub fn init(save: &Vec<Character>, from: i32) -> Self {
-        let mut cache = HashMap::new();
-        let cache_path = Path::new(Self::CACHE_PATH);
-        if !cache_path.exists() {
+        let mut storage = HashMap::new();
+        let storage_path = Path::new(Self::STORAGE_PATH);
+        if !storage_path.exists() {
             let content = save
                 .iter()
                 .enumerate()
                 .map(|(slot, character)| {
-                    let key = Self::get_cache_key(slot, character, from);
-                    cache.insert(key.clone(), character.death);
+                    let key = Self::get_key(slot, character, from);
+                    storage.insert(key.clone(), character.death);
                     return format!("{} = {}", key, character.death);
                 })
                 .collect::<Vec<String>>()
                 .join("\n");
-            fs::write(cache_path, content).expect("unable to write new cache file");
+            fs::write(storage_path, content).expect("unable to write new storage file");
         } else {
-            let content = fs::read_to_string(cache_path).expect("unable to load cache file");
+            let content = fs::read_to_string(storage_path).expect("unable to load storage file");
             for line in content.split("\n") {
                 if let Some((key, value)) = line.trim().split_once(" = ") {
                     let value = value.parse::<i32>().expect("invalid data type");
-                    cache
+                    storage
                         .entry(key.to_string())
                         .and_modify(|x| *x = value)
                         .or_insert(value);
@@ -41,7 +41,7 @@ impl Cache {
             }
         }
 
-        Self { data: cache }
+        Self { data: storage }
     }
 
     pub fn write_down(&mut self) {
@@ -52,17 +52,17 @@ impl Cache {
             .collect::<Vec<String>>()
             .join("\n");
 
-        let cache_path = Path::new(Self::CACHE_PATH);
-        fs::write(cache_path, content).expect("unable to write cache file");
+        let storage_path = Path::new(Self::STORAGE_PATH);
+        fs::write(storage_path, content).expect("unable to write storage file");
     }
 
     pub fn flush() {
-        let cache_path = Path::new(Self::CACHE_PATH);
-        if cache_path.exists() {
-            fs::remove_file(cache_path).expect("unable to flush cache");
-            println!("flushed cache");
+        let storage_path = Path::new(Self::STORAGE_PATH);
+        if storage_path.exists() {
+            fs::remove_file(storage_path).expect("unable to flush storage");
+            println!("flushed storage");
         } else {
-            println!("no cache file found, all clear")
+            println!("no storage file found, all clear")
         }
     }
 
