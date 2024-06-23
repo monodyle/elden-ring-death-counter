@@ -1,4 +1,4 @@
-use std::fs;
+use std::{env, fs};
 
 use byteorder::{BigEndian, ByteOrder};
 
@@ -84,7 +84,13 @@ static END_SLOT: usize = 0x280000;
 static BEGIN_SLOT: usize = 0x1901d04;
 
 fn main() {
-    let buffer = fs::read("ER0000.sl2").expect("unable to open save file");
+    let args: Vec<String> = env::args().collect();
+    if args.len() <= 1 {
+        panic!("file path is not provided")
+    };
+    let path = &args[1];
+
+    let buffer = fs::read(path).expect("unable to open save file");
     let mut save = Vec::new();
 
     for i in 0..10 {
