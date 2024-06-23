@@ -14,15 +14,15 @@ IF NOT EXIST ".\watchexec.exe" (
 
 IF NOT EXIST ".\elden-ring-death-counter.exe" (
     ECHO elden-ring-death-counter.exe not found, attempting to download and extract...
-    curl -L -o elden-ring-death-counter.zip https://github.com/monodyle/elden-ring-death-counter/releases/download/v0.1.0/elden-ring-death-counter-0.1.0-x86_64-pc-windows-msvc.zip
+    curl -L -o elden-ring-death-counter.zip https://github.com/monodyle/elden-ring-death-counter/releases/download/v0.2.0/elden-ring-death-counter-0.2.0-x86_64-pc-windows-msvc.zip
     tar -xf elden-ring-death-counter.zip
-	xcopy .\elden-ring-death-counter-0.1.0-x86_64-pc-windows-msvc\elden-ring-death-counter.exe .\
-	rmdir /s /q .\elden-ring-death-counter-0.1.0-x86_64-pc-windows-msvc
+	xcopy .\elden-ring-death-counter-0.2.0-x86_64-pc-windows-msvc\elden-ring-death-counter.exe .\
+	rmdir /s /q .\elden-ring-death-counter-0.2.0-x86_64-pc-windows-msvc
 	del .\elden-ring-death-counter.zip
 )
 
 IF NOT EXIST ".\prompt.ps1" (
-	curl -L -o prompt.ps1 https://gist.githubusercontent.com/monodyle/eecadfca32c4a2d87c9338f588f85291/raw/dbb752a8e9b737448600c16bcb1f4dad5d5b0dd9/gistfile1.txt
+	curl -L -o prompt.ps1 https://raw.githubusercontent.com/monodyle/elden-ring-death-counter/8a8449432d30756561d9028fa578816bd0af4f6c/scripts/prompt.ps1
 )
 
 :: Save File
