@@ -1,5 +1,5 @@
 [package]
-name = "elden-ring-deaths"
+name = "elden-ring-death-counter"
 version = "0.1.0"
 edition = "2021"
 
