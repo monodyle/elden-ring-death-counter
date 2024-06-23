@@ -1,0 +1,152 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*.*.*"
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_UNSTABLE_SPARSE_REGISTRY: "true"
+
+permissions:
+  contents: write
+
+jobs:
+  info:
+    name: Gather info
+    runs-on: ubuntu-latest
+    outputs:
+      cli_version: ${{ steps.version.outputs.cli_version }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract version
+        id: version
+        shell: bash
+        run: |
+          set -euxo pipefail
+
+          version=$(grep -m1 -F 'version =' Cargo.toml | cut -d\" -f2)
+
+          if [[ -z "$version" ]]; then
+            echo "Error: no version found :("
+            exit 1
+          fi
+
+          echo "cli_version=$version" >> $GITHUB_OUTPUT
+
+  build:
+    name: Build
+    runs-on: windows-latest
+    needs: info
+    env:
+      version: ${{ needs.info.outputs.cli_version }}
+      target: x86_64-pc-windows-msvc
+      dst: elden-ring-death-counter-${{ needs.info.outputs.cli_version }}-x86_64-pc-windows-msvc
+    steps:
+      - uses: actions/checkout@v4
+
+      # https://github.com/actions/cache/issues/752
+      - if: ${{ runner.os == 'Windows' }}
+        name: Use GNU tar
+        shell: cmd
+        run: |
+          echo "Adding GNU tar to PATH"
+          echo C:\Program Files\Git\usr\bin>>"%GITHUB_PATH%"
+
+      - name: Configure caching
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ env.target }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-${{ env.target }}-
+            ${{ runner.os }}-cargo-
+
+      - name: Configure toolchain
+        run: |
+          rustup toolchain install --profile minimal --no-self-update stable
+          rustup default stable
+          rustup target add ${{ env.target }}
+
+      - name: Build
+        shell: bash
+        run: |
+          cargo build \
+            -p elden-ring-death-counter \
+            --release --locked \
+            --target ${{ env.target }}
+
+      - name: Package
+        shell: bash
+        run: |
+          set -euxo pipefail
+          bin="target/${{ env.target }}/release/elden-ring-death-counter.exe"
+          objcopy --compress-debug-sections "$bin" || true
+
+          mkdir "$dst"
+
+          mkdir -p "target/release"
+          cp "$bin" "target/release/" # workaround for cargo-deb silliness with targets
+
+          cp "$bin" "$dst/"
+          cp -r README.md "$dst/"
+
+      - name: Archive (zip)
+        shell: bash
+        run: 7z a "$dst.zip" "$dst"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-x86-64
+          retention-days: 1
+          path: |
+            elden-ring-death-counter-*.zip
+
+  upload:
+    needs: [build, info]
+    name: Checksum and publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install b3sum
+        uses: taiki-e/install-action@v2
+        with:
+          tool: b3sum
+
+      - uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+
+      - name: Bulk checksums
+        run: |
+          b3sum elden-ring-death-counter-* | tee B3SUMS
+          sha512sum elden-ring-death-counter-* | tee SHA512SUMS
+          sha256sum elden-ring-death-counter-* | tee SHA256SUMS
+
+      - name: File checksums
+        run: |
+          for file in elden-ring-death-counter-*; do
+            b3sum --no-names $file > "$file.b3"
+            sha256sum $file | cut -d ' ' -f1 > "$file.sha256"
+            sha512sum $file | cut -d ' ' -f1 > "$file.sha512"
+          done
+
+      - uses: softprops/action-gh-release@9d7c94cfd0a1f3ed45544c887983e9fa900f0564
+        with:
+          tag_name: v${{ needs.info.outputs.cli_version }}
+          name: CLI v${{ needs.info.outputs.cli_version }}
+          append_body: true
+          files: |
+            elden-ring-death-counter-*.zip
+            *SUMS
+            *.b3
+            *.sha*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
