@@ -23,6 +23,7 @@ Options:
   -f, --format <FORMAT>    Format of output files (defaut: "Death: {}"), where {} will be replaced by the death count [default: "Death: {}"]
   -F, --from <FROM>        Death counter will start from this value instead of counting total character death
       --outfile <OUTFILE>  Output file format (default: {slot}-{character_name}.txt) [default: {slot}-{character_name}.txt]
+ 	  --flush              Clear all previous cache, this option should be using standalone
   -h, --help               Print help
   -V, --version            Print version
 
