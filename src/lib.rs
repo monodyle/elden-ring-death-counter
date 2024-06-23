@@ -23,6 +23,7 @@ pub fn read_save_file(buffer: Vec<u8>) -> Vec<Character> {
             &character_name_bytes
                 .iter()
                 .map(|&x| x as u16)
+                .filter(|&x| x != 0)
                 .collect::<Vec<u16>>(),
         )
         .trim()

@@ -7,5 +7,18 @@
 ### Usage
 
 ```bash
-elden-ring-death-counter SAVE_FILE.sl2
+$ elden-ring-death-counter <command> <input_file> [output_folder] [output_format]
+
+command:
+  debug    - output detailed debug information about the save file
+  get      - retrieve and display the current death count
+  watch    - monitor the save file and update the death count continuously
+input_file: Elden Ring save file location
+output_folder: location will write death count files (default: "output")
+output_format: format of output files (defaut: "Death: {}"), where {} will be replaced by the death count
+# relative: count from current death
+
+# Example
+elden-ring-death-counter watch %APPDATA%/EldenRing/<steamid>/ER0000.sl2
+elden-ring-death-counter watch ER0000.sl2 ../OBS "Today Deaths: {}" relative
 ```
