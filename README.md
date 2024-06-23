@@ -31,7 +31,7 @@ $ elden-ring-death-counter .\76561198250312914\ER0000.sl2 --from 183 -f "I death
 
 ### OBS Setup
 
-1. Download pre-built binary of Death Counter
+1. [Download pre-built binary of Death Counter][download]
 2. [Download pre-built binary of watchexec][watchexec]
 3. Put all binaries in the your folder you want, example: `Desktop\DeathCounter`
 4. Run command
@@ -41,4 +41,5 @@ $ elden-ring-death-counter .\76561198250312914\ER0000.sl2 --from 183 -f "I death
 5. In OBS, create Text source with location `Desktop\DeathCounter\OBS\[slot]-[your_character_name].txt`
 6. Press `Ctrl+C` to abort the counter
 
+[download]: https://github.com/monodyle/elden-ring-death-counter/releases/latest
 [watchexec]: https://github.com/watchexec/watchexec/releases/latest
