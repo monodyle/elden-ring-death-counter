@@ -38,7 +38,7 @@ fn main() {
         % 10
         == 0;
 
-    if cli.from.is_none() && rand {
+    if rand {
         println!("You might want to start from...");
         save.iter().enumerate().for_each(|(index, c)| {
             println!(

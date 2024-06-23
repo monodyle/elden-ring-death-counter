@@ -50,7 +50,7 @@ $ elden-ring-death-counter.exe .\76561198250312914\ER0000.sl2 --from 183 -f "I d
 > [!TIP]
 > You can write output file as HTML & auto reload, then add a Browser source instead of Text source for better customization experience
 > ```powershell
-> .\watchexec.exe -i C:\Users\Admin\AppData\Roaming\EldenRing\76561198250312914\ER0000.sl2 .\elden-ring-death-counter.exe C:\Users\Admin\AppData\Roaming\EldenRing\76561198250312914\ER0000.sl2 --outfile "save-{slot}-{character_name}.html" --format "<h1>Today I died {} times</h1><script>setTimeout(() => window.location.reload(), 1000)</script>" --from 78
+> .\watchexec.exe -i C:\Users\Admin\AppData\Roaming\EldenRing\76561198250312914\ER0000.sl2 ".\elden-ring-death-counter.exe C:\Users\Admin\AppData\Roaming\EldenRing\76561198250312914\ER0000.sl2 --outfile 'save-{slot}-{character_name}.html' --format '<h1>Today I died {} times</h1><script>setTimeout(() => window.location.reload(), 1000)</script>'"
 > ```
 
 OBS Browser Source Example:

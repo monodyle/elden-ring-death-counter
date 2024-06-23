@@ -30,7 +30,7 @@ FOR /F "tokens=* usebackq" %%a IN (`powershell -executionpolicy bypass -file pro
 
 IF NOT %SAVE_FILE%=="" (
 	ECHO loaded save file %SAVE_FILE%
-	.\watchexec.exe -i %SAVE_FILE% .\elden-ring-death-counter.exe %SAVE_FILE% -o .\OBS
+	.\watchexec.exe -i %SAVE_FILE% ".\elden-ring-death-counter.exe %SAVE_FILE% -o .\OBS"
 )
 
 ENDLOCAL
