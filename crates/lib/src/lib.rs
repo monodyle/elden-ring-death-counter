@@ -1,8 +1,10 @@
 use byteorder::{BigEndian, ByteOrder};
+use serde::Serialize;
 use util::{find_next_ff, get_death_buffer_pos, get_zeros_from_binary};
 
 mod util;
 
+#[derive(Serialize)]
 pub struct Character {
     pub name: String,
     pub level: i32,

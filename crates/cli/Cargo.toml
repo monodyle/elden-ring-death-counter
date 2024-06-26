@@ -1,0 +1,14 @@
+[package]
+name = "elden-ring-death-counter-cli"
+version = "0.3.0"
+edition = "2021"
+
+[[bin]]
+name = "elden-ring-death-counter"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4.5", features = ["derive"] }
+
+[dependencies.elden-ring-death-counter]
+path = "../lib"

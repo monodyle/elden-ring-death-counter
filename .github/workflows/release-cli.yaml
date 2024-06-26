@@ -27,7 +27,7 @@ jobs:
         run: |
           set -euxo pipefail
 
-          version=$(grep -m1 -F 'version =' Cargo.toml | cut -d\" -f2)
+          version=$(grep -m1 -F 'version ='/crates/cli/Cargo.toml | cut -d\" -f2)
 
           if [[ -z "$version" ]]; then
             echo "Error: no version found :("

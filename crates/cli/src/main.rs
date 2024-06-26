@@ -1,8 +1,8 @@
 mod storage;
 
+use elden_ring_death_counter::read_save_file;
 use storage::Storage;
 use clap::{arg, command, Parser};
-use elden_ring_death_counter::read_save_file;
 use std::{
     fmt::Debug,
     fs,

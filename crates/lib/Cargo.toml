@@ -1,0 +1,10 @@
+[package]
+name = "elden-ring-death-counter"
+description = "Oh yes... Tarnished, are we? Come to the Lands Between for the Elden Ring, hmm? Of course you have.\nNo shame in it.\nUnfortunately for you, however, you are maidenless."
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+byteorder = "1.5"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
