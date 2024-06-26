@@ -14,14 +14,14 @@
 
 	let start = false;
 
-	async function startWatch() {
+	$: startWatch = async function () {
 		if (!start) return;
 		const save = await invoke<SaveSlots>("load_save", {
 			location: $savePath,
 		});
 		saveSlots.set(save);
 		await invoke("write_save", {
-			death: save[$selectedSlot],
+			death: save[$selectedSlot].death,
 			from: $countFrom,
 			outdir: $outputDirectory,
 			filename: $outputFilename,

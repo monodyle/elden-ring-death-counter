@@ -22,7 +22,6 @@ static LAST_DEATH: Lazy<Mutex<i32>> = Lazy::new(|| Mutex::new(0));
 #[tauri::command]
 fn write_save(outdir: &str, filename: &str, death: i32, format: &str, from: i32) {
     let path = Path::new(&outdir);
-
     if !path.exists() {
         fs::create_dir_all(path).expect("unable to create directory");
     }
@@ -33,7 +32,7 @@ fn write_save(outdir: &str, filename: &str, death: i32, format: &str, from: i32)
     if death != last_death {
         *LAST_DEATH.lock().expect("unable to get last death mutex") = death;
     }
-    let content = format.replace("{}", &(death - from).to_string());
+    let content = format.replace("{}", &(death - from).max(0).to_string());
     fs::write(path.clone(), content).expect("unable to write output");
 }
 
