@@ -1,21 +1,17 @@
 import { invoke } from '@tauri-apps/api'
-import { derived, writable, type Writable } from 'svelte/store'
+import { derived, writable } from 'svelte/store'
 
 export const savePath = writable<string>(
 	localStorage.getItem('__save_path') || ''
 )
-savePath.subscribe(async value => {
-	localStorage.setItem('__save_path', value)
-})
 
 export type SaveSlots = Array<{ name: string; level: number; death: number }>
-export const saveSlots = derived<Writable<string>, SaveSlots>(
-	savePath,
-	($savePath, set) => {
-		set([])
-		invoke<SaveSlots>('load_save', { location: $savePath }).then(set)
-	}
-)
+export const saveSlots = writable<SaveSlots>([])
+
+savePath.subscribe(async value => {
+	localStorage.setItem('__save_path', value)
+	invoke<SaveSlots>('load_save', { location: value }).then(saveSlots.set)
+})
 
 export const selectedSlot = writable<number>(
 	parseInt(localStorage.getItem('__selected_slot') ?? '0') || 0

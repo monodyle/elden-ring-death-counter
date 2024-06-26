@@ -5,26 +5,34 @@
 		outputDirectory,
 		outputFilename,
 		outputFormat,
+		savePath,
+		saveSlots,
 		selectedCharacter,
+		selectedSlot,
+		type SaveSlots,
 	} from "./store";
 
 	let start = false;
-	let timer: number | null = null;
+
+	async function startWatch() {
+		if (!start) return;
+		const save = await invoke<SaveSlots>("load_save", {
+			location: $savePath,
+		});
+		saveSlots.set(save);
+		await invoke("write_save", {
+			death: save[$selectedSlot],
+			from: $countFrom,
+			outdir: $outputDirectory,
+			filename: $outputFilename,
+			format: $outputFormat,
+		});
+		return startWatch();
+	}
 
 	$: {
 		if (start) {
-			timer = setInterval(() => {
-				console.debug("write_save...");
-				invoke("write_save", {
-					death: $selectedCharacter.death,
-					from: $countFrom,
-					outdir: $outputDirectory,
-					filename: $outputFilename,
-					format: $outputFormat,
-				});
-			}, 1000);
-		} else {
-			if (timer) clearInterval(timer);
+			startWatch();
 		}
 	}
 
