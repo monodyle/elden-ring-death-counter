@@ -6,6 +6,13 @@ use std::{fs, path::Path, sync::Mutex};
 
 #[tauri::command]
 fn load_save(location: &str) -> Vec<Character> {
+    let path = Path::new(location);
+    if !path.exists() {
+        return vec![];
+    }
+    if path.is_dir() {
+        return vec![];
+    }
     let buffer = fs::read(location).expect("unable to open save file");
     read_save_file(buffer)
 }
