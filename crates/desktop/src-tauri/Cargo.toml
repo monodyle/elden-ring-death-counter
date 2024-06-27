@@ -1,8 +1,8 @@
 [package]
 name = "death-counter-gui"
 version = "0.0.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "Elden Ring Death Counter"
+authors = ["monodyle"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
